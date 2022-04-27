@@ -112,6 +112,23 @@ export const sample = {
 const sentenceCase = (str) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
+const findKey = (obj, fn) =>
+  Object.keys(obj).find((key) => fn(obj[key], key, obj));
+
+// Cf. https://manage.test.nhs.marvell-consulting.com/api/3/action/organization_list
+const organisationMappings = {
+  'professional-record-standards-body': [
+    'prsb',
+    'professional record standards body',
+    'professional records standards body',
+  ],
+  'nhs-digital': ['nhs', 'nhsd', 'nhsx', 'nhs digital'],
+};
+export const mapOwnerOrg = (key) =>
+  findKey(organisationMappings, (mappings) =>
+    mappings.includes(key.toLowerCase())
+  );
+
 export const trimArr = (arr) => arr.map((i) => i.trim());
 
 export const keyIn = (key, arr) =>
@@ -130,6 +147,10 @@ export const joinTitlesToValues = (colTitles, vals) => {
 
         if (key === 'status') {
           field = field.toLowerCase();
+        }
+
+        if (key === 'owner_org') {
+          field = mapOwnerOrg(field);
         }
 
         // dumb way of segmenting to topic and care setting

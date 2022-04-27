@@ -1,4 +1,11 @@
-import { joinTitlesToValues, sample, trimArr, topics, keyIn } from '../index';
+import {
+  joinTitlesToValues,
+  sample,
+  trimArr,
+  topics,
+  keyIn,
+  mapOwnerOrg,
+} from '../index';
 
 const { headings, values } = sample;
 
@@ -6,6 +13,19 @@ describe('parse', () => {
   describe('trimArr', () => {
     test('trims space in arrays', () => {
       expect(trimArr(['trim  ', '  space'])).toEqual(['trim', 'space']);
+    });
+  });
+
+  describe('mapOwnerOrg', () => {
+    test('prsb => professional-record-standards-body', () => {
+      expect(mapOwnerOrg('prsb')).toEqual('professional-record-standards-body');
+      expect(mapOwnerOrg('professional record standards body')).toEqual(
+        'professional-record-standards-body'
+      );
+    });
+    test('nhsd => nhs-digital', () => {
+      expect(mapOwnerOrg('nhsd')).toEqual('nhs-digital');
+      expect(mapOwnerOrg('nhs')).toEqual('nhs-digital');
     });
   });
 
@@ -34,7 +54,6 @@ describe('parse', () => {
   describe('joinTitlesToValues', () => {
     const result = joinTitlesToValues(trimArr(headings), trimArr(values));
     test('sets topic and care setting', () => {
-      console.log('top', result.topic);
       expect(result.topic).toEqual([
         'Demographics',
         'Key care information',
@@ -52,6 +71,7 @@ describe('parse', () => {
         'Social care',
         'Urgent and Emergency Care',
       ]);
+      expect(result.owner_org).toEqual('professional-record-standards-body');
     });
     test('sets status field to lowercase', () => {
       result.status
