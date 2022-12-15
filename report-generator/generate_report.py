@@ -11,7 +11,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import datetime as DT
 
-CONFIG_FILE="/home/mark/projects/asltesting/report.yaml"
+CONFIG_FILE="./report.yaml"
 
 report_yaml = yaml.safe_load(open(CONFIG_FILE))
 
